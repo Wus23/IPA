@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/modernist-90b18a50-15f0-449f-a540-2f104d7296ae/styles.css">
+<script src="_ds/modernist-90b18a50-15f0-449f-a540-2f104d7296ae/_ds_bundle.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+  a { color: var(--color-accent); }
+  a:hover { color: var(--color-accent-700); }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)">
+
+  <div class="nav">
+    <div class="nav-brand" style="cursor:pointer" onClick="{{goHome}}">{{brandText}}</div>
+    <sc-for list="{{navItems}}" as="item" hint-placeholder-count="4">
+      <a href="javascript:void(0)" onClick="{{item.go}}" aria-current="{{item.current}}">{{item.label}}</a>
+    </sc-for>
+    <div style="display:flex;gap:4px;font-size:13px;font-family:var(--font-heading);font-weight:800">
+      <a href="javascript:void(0)" onClick="{{setLangEn}}" aria-current="{{langEnCurrent}}">EN</a>
+      <span style="opacity:0.4">/</span>
+      <a href="javascript:void(0)" onClick="{{setLangZh}}" aria-current="{{langZhCurrent}}">中文</a>
+    </div>
+  </div>
+
+  <sc-if value="{{isHome}}" hint-placeholder-val="{{true}}">
+    <div style="max-width:960px;margin:0 auto;padding:64px 32px 56px">
+      <h6 style="color:var(--color-accent);margin-bottom:12px">{{heroKicker}}</h6>
+      <h1 style="font-size:48px;max-width:760px">{{heroTitle}}</h1>
+      <p style="font-size:17px;max-width:640px;opacity:0.85">{{heroIntro}}</p>
+      <div class="hr"></div>
+      <div style="display:flex;gap:40px;flex-wrap:wrap;margin:8px 0 48px">
+        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.books}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.books}}</div></div>
+        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.photos}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.photos}}</div></div>
+        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.interviews}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.interviews}}</div></div>
+        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.notes}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.notes}}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <sc-for list="{{sectionCards}}" as="s" hint-placeholder-count="4">
+          <div class="card elev-sm" style="cursor:pointer" onClick="{{s.open}}">
+            <div class="card-kicker">{{s.kicker}}</div>
+            <div class="card-title">{{s.label}}</div>
+            <p class="card-body">{{s.intro}}</p>
+            <div class="card-meta">{{s.count}} {{itemsSuffix}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isList}}" hint-placeholder-val="{{false}}">
+    <div style="max-width:960px;margin:0 auto;padding:48px 32px 64px">
+      <a href="javascript:void(0)" onClick="{{goHome}}" style="font-size:13px">{{homeLinkText}}</a>
+      <h6 style="color:var(--color-accent);margin-top:20px">{{section.kicker}}</h6>
+      <h2>{{section.navLabel}}</h2>
+      <p style="opacity:0.75;max-width:600px">{{section.intro}}</p>
+      <div class="hr"></div>
+      <div style="{{gridStyle}}">
+        <sc-for list="{{items}}" as="item" hint-placeholder-count="4">
+          <div class="card elev-sm" style="cursor:pointer" onClick="{{item.open}}">
+            <sc-if value="{{item.showImage}}" hint-placeholder-val="{{false}}">
+              <image-slot id="{{item.imageId}}" shape="rect" placeholder="Drop a photo" class="grayscale" style="width:100%;aspect-ratio:4/3"></image-slot>
+            </sc-if>
+            <sc-if value="{{item.tag}}" hint-placeholder-val="{{''}}">
+              <span class="tag {{item.tagClass}}" style="align-self:flex-start">{{item.tag}}</span>
+            </sc-if>
+            <div class="card-title">{{item.title}}</div>
+            <p class="card-body">{{item.body}}</p>
+            <sc-if value="{{showSampleHints}}" hint-placeholder-val="{{true}}">
+              <div style="font-size:10px;font-style:italic;opacity:0.5">{{sampleHintText}}</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isDetail}}" hint-placeholder-val="{{false}}">
+    <div style="max-width:720px;margin:0 auto;padding:48px 32px 64px">
+      <a href="javascript:void(0)" onClick="{{backToList}}" style="font-size:13px">← {{section.navLabel}}</a>
+      <div style="margin-top:24px">
+        <sc-if value="{{currentItem.tag}}" hint-placeholder-val="{{''}}">
+          <span class="tag {{currentItem.tagClass}}">{{currentItem.tag}}</span>
+        </sc-if>
+      </div>
+      <h2 style="margin-top:12px">{{currentItem.title}}</h2>
+      <sc-if value="{{currentItem.showImage}}" hint-placeholder-val="{{false}}">
+        <image-slot id="{{currentItem.fullImageId}}" shape="rect" placeholder="Drop the full photograph" class="grayscale" style="width:100%;aspect-ratio:3/2;margin:16px 0"></image-slot>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:24px;margin:20px 0;padding:16px 0;border-top:2px solid var(--color-divider);border-bottom:2px solid var(--color-divider)">
+        <sc-for list="{{currentItem.meta}}" as="m" hint-placeholder-count="3">
+          <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;opacity:0.55">{{m.k}}</div><div style="font-size:14px;margin-top:2px">{{m.v}}</div></div>
+        </sc-for>
+      </div>
+      <p style="font-size:16px;line-height:1.6">{{currentItem.body}}</p>
+      <sc-if value="{{showSampleHints}}" hint-placeholder-val="{{true}}">
+        <p style="font-size:12px;font-style:italic;opacity:0.5">{{sampleHintDetailText}}</p>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;showSampleHints&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot; },
+  &quot;cardLayout&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;grid&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;grid&quot;, &quot;list&quot;], &quot;section&quot;: &quot;Behavior&quot; }
+}">
+const T = (en, zh) => ({ en, zh });
+
+class Component extends DCLogic {
+  state = { view: 'home', sectionKey: null, itemId: null, lang: 'en' };
+
+  sectionOrder = ['books', 'photos', 'interviews', 'notes'];
+
+  ui = {
+    brand: T('Afghan Communities in Pakistan — Field Archive', '巴基斯坦阿富汗侨民 — 田野调查档案'),
+    heroKicker: T('Fieldwork Archive', '田野调查档案'),
+    heroTitle: T('Afghan communities in Pakistan', '巴基斯坦的阿富汗侨民'),
+    heroIntro: T(
+      'This site collects material from fieldwork among Afghan communities in Pakistan — people who have lived here for two or three generations, and people here for shorter stretches, as students or workers. It describes what was found; it does not draw conclusions here. Four kinds of material are gathered: local books and archives, photographs, interviews, and field notes and papers.',
+      '本网站汇集了关于巴基斯坦阿富汗侨民的田野调查材料——既包括已在此定居两三代的家庭，也包括因求学或务工而短期居留的人员。这里描述所见所闻，不在此作出结论。汇集了四类材料：地方书籍与档案、照片、访谈，以及田野笔记与论文。'
+    ),
+    statLabels: {
+      books: T('Books & archives', '书籍与档案'),
+      photos: T('Photographs', '照片'),
+      interviews: T('Interviews', '访谈'),
+      notes: T('Field notes & papers', '田野笔记与论文'),
+    },
+    itemsSuffix: T('items', '项'),
+    homeLink: T('← Home', '← 首页'),
+    sampleHint: T('Sample entry — replace with your material', '示例条目 — 请替换为您的实际材料'),
+    sampleHintDetail: T('Sample entry — replace with your material.', '示例条目 — 请替换为您的实际材料。'),
+  };
+
+  tagLabels = {
+    Resident: T('Resident', '常住居民'),
+    'Non-resident': T('Non-resident', '非常住人员'),
+    General: T('General', '综合'),
+    'Field note': T('Field note', '田野笔记'),
+    'Diary entry': T('Diary entry', '日记'),
+    'Paper draft': T('Paper draft', '论文草稿'),
+  };
+
+  sections = {
+    books: {
+      navLabel: T('Archive & Books', '档案与书籍'), kicker: T('Local Books & Archives', '地方书籍与档案'),
+      intro: T('Books, ledgers, and community archives held by families, centers, and local offices.',
+        '由家庭、社区中心与地方机构保存的书籍、登记簿与社区档案。'),
+      items: [
+        { id: 'b1', title: T('Local history compendium — Old City quarter', '白沙瓦老城区地方史手抄本'), meta: [
+            { k: T('Format', '格式'), v: T('Bound manuscript', '装订手抄本') },
+            { k: T('Locality', '地点'), v: T('Peshawar, Old City', '白沙瓦老城区') },
+            { k: T('Language', '语言'), v: T('Pashto / Urdu', '普什图语 / 乌尔都语') },
+            { k: T('Held at', '存放地'), v: T('Private family collection', '私人家庭收藏') } ],
+          body: T("A hand-copied record of the quarter's early settlers, kept by one family and shown to me on a second visit. Replace this with the actual citation, access conditions, and any pages you photographed.",
+            '这是一本关于该街区早期定居者的手抄记录，由一户人家保存，并在我第二次到访时展示给我看。请替换为实际的引用信息、查阅条件，以及您拍摄的任何页面。') },
+        { id: 'b2', title: T('Refugee registration ledgers, 1980s', '1980年代难民登记簿'), meta: [
+            { k: T('Format', '格式'), v: T('Bound ledgers', '装订登记簿') },
+            { k: T('Locality', '地点'), v: T('Provincial record office', '省级档案办公室') },
+            { k: T('Language', '语言'), v: T('Urdu', '乌尔都语') },
+            { k: T('Held at', '存放地'), v: T('Restricted, by request', '限制查阅，需申请') } ],
+          body: T('Administrative registers from the early resettlement period, held under restricted access. Add reference numbers, the date range covered, and the terms under which you viewed them.',
+            '这是早期安置时期的行政登记簿，查阅受限。请补充档案编号、涵盖的时间范围，以及您获准查阅的条件。') },
+        { id: 'b3', title: T('Community newsletter run', '社区通讯合订本'), meta: [
+            { k: T('Format', '格式'), v: T('Periodical, bound volumes', '期刊，装订合订本') },
+            { k: T('Locality', '地点'), v: T('Community center library', '社区中心图书室') },
+            { k: T('Language', '语言'), v: T('Dari', '达里语') },
+            { k: T('Held at', '存放地'), v: T('Community center', '社区中心') } ],
+          body: T('A locally produced newsletter, several years bound together in one volume. Note which years are missing and who currently maintains the collection.',
+            '这是本地社区制作的通讯，多年的刊物被装订成一册。请注明缺失的年份，以及目前负责保管这批藏品的人。') },
+        { id: 'b4', title: T('Oral genealogy notebook', '口述家谱笔记本'), meta: [
+            { k: T('Format', '格式'), v: T('Handwritten notebook', '手写笔记本') },
+            { k: T('Locality', '地点'), v: T('Family home', '家庭住所') },
+            { k: T('Language', '语言'), v: T('Pashto', '普什图语') },
+            { k: T('Held at', '存放地'), v: T('Private', '私人保存') } ],
+          body: T('A notebook of family lineage kept by a community elder. Describe how it was shared with you and any conditions on quoting from it.',
+            '这是一位社区长者保存的家族世系笔记本。请描述对方是如何与您分享这份材料的，以及引用时需要遵守的任何条件。') },
+        { id: 'b5', title: T('Mosque committee endowment records', '清真寺理事会产业记录'), meta: [
+            { k: T('Format', '格式'), v: T('Loose papers, archive box', '散页文件，档案盒') },
+            { k: T('Locality', '地点'), v: T('Neighborhood mosque', '街区清真寺') },
+            { k: T('Language', '语言'), v: T('Urdu', '乌尔都语') },
+            { k: T('Held at', '存放地'), v: T('Committee office', '理事会办公室') } ],
+          body: T('Property and financial records kept by the mosque committee. Note the date range covered and who granted you access.',
+            '这是清真寺理事会保存的产业与财务记录。请注明记录涵盖的时间范围，以及授权您查阅的人员。') },
+      ],
+    },
+    photos: {
+      navLabel: T('Photographs', '照片'), kicker: T('Photographs', '照片'),
+      intro: T('Images taken during visits — homes, workplaces, gatherings, and streets.',
+        '田野走访期间拍摄的影像——家庭、工作场所、聚会与街景。'),
+      items: [
+        { id: 'p1', title: T('Market stall, second generation', '市场摊位，第二代侨民'), tag: 'Resident', imageId: 'img-p1',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T("A shopkeeper whose family arrived in the early 1980s, photographed at his stall. Add the exact location, date, and a line on what's happening in the frame.",
+            '这位店主的家族在1980年代初抵达，照片拍摄于他的摊位前。请补充确切地点、日期，以及画面中正在发生的情况。') },
+        { id: 'p2', title: T('Dormitory courtyard', '宿舍庭院'), tag: 'Non-resident', imageId: 'img-p2',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T("Students living away from home for the length of their studies, photographed in a shared courtyard. Note the institution, the students' home provinces, and the date.",
+            '这些学生因求学而暂居异乡，照片拍摄于共用庭院。请注明所在院校、学生的家乡省份，以及拍摄日期。') },
+        { id: 'p3', title: T('Family home, three generations', '一家三代同堂'), tag: 'Resident', imageId: 'img-p3',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('Grandparents, parents, and children sharing one household. Add who is pictured, their relation to each other, and the neighborhood.',
+            '祖辈、父辈与子女共同生活在一个家庭中。请补充照片中人物及其相互关系，以及所在街区。') },
+        { id: 'p4', title: T('Workshop, day laborer', '工坊中的短期务工者'), tag: 'Non-resident', imageId: 'img-p4',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A worker on a short-term contract, photographed mid-shift. Note his trade, how long he has been in Pakistan, and whether he sends money home.',
+            '这位工人从事短期合同工作，照片拍摄于工作中。请注明他的行业、在巴基斯坦停留的时间，以及是否向家中寄钱。') },
+        { id: 'p5', title: T('Community gathering', '社区聚会'), tag: 'General', imageId: 'img-p5',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A gathering that brought together residents and newer arrivals. Note the occasion, who organized it, and who is visible in the frame.',
+            '这场聚会汇集了长期居民与新近抵达者。请注明活动缘由、组织者，以及画面中出现的人物。') },
+        { id: 'p6', title: T('Neighborhood street scene', '街区街景'), tag: 'General', imageId: 'img-p6',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A wider view of the neighborhood where much of this fieldwork took place. Add the street name, time of day, and anything notable happening.',
+            '这是本次田野调查主要开展地点的街区全景。请补充街道名称、拍摄时间，以及任何值得注意的情况。') },
+      ],
+    },
+    interviews: {
+      navLabel: T('Interviews', '访谈'), kicker: T('Interviews', '访谈'),
+      intro: T('Conversations held in the field, summarized here without added interpretation.',
+        '田野调查期间进行的对话，在此仅作概述，不附加解读。'),
+      items: [
+        { id: 'i1', title: T('Shopkeeper, second generation', '店主，第二代侨民'), tag: 'Resident',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('Spoke with a shopkeeper whose grandparents settled here decades ago. Summarize what was discussed — livelihood, residency status, ties to family still in Afghanistan — without your own interpretation.',
+            '与一位祖辈数十年前定居于此的店主交谈。请概述访谈内容——生计、居留身份、与阿富汗家人的联系——不加入个人解读。') },
+        { id: 'i2', title: T('University student', '大学生'), tag: 'Non-resident',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A student here on a study visa, discussing daily life away from home. Note the length of stay, course of study, and plans after graduation.',
+            '一位持学生签证在此求学的学生，谈及远离家乡的日常生活。请注明停留时长、所学专业，以及毕业后的打算。') },
+        { id: 'i3', title: T('Day laborer', '短期务工者'), tag: 'Non-resident',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A worker on a short-term basis, discussing work conditions and travel. Note his trade, contract length, and how he found the work.',
+            '一位从事短期工作的劳工，谈及工作条件与往返情况。请注明他的行业、合同期限，以及找到这份工作的途径。') },
+        { id: 'i4', title: T('Community elder, first generation', '社区长者，第一代侨民'), tag: 'Resident',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T("An elder who arrived as a refugee decades ago, discussing the early years of settlement. Note what he described about arrival, documentation, and the neighborhood's early years.",
+            '一位数十年前作为难民抵达的长者，谈及早期定居的岁月。请记录他所描述的抵达经过、证件情况，以及街区早期的历史。') },
+        { id: 'i5', title: T('Textile worker', '纺织女工'), tag: 'Non-resident',
+          meta: [ { k: T('Location', '地点'), v: T('—', '—') }, { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A worker in a textile workshop, discussing hours and pay. Note her length of stay, working conditions, and any plans to return.',
+            '一位在纺织作坊工作的女工，谈及工时与薪酬。请注明她的停留时长、工作条件，以及是否有返乡计划。') },
+      ],
+    },
+    notes: {
+      navLabel: T('Field Notes', '田野笔记'), kicker: T('Field Notes & Papers', '田野笔记与论文'),
+      intro: T('Diary entries, field notes, and academic paper drafts written during and after fieldwork.',
+        '田野调查期间及之后撰写的日记、田野笔记与学术论文草稿。'),
+      items: [
+        { id: 'n1', title: T('First market visit', '首次市场探访'), tag: 'Field note',
+          meta: [ { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('Notes from an initial visit to the market where several interviews later took place. Record who was present, what was observed, and questions to follow up on.',
+            '记录了对某个市场的首次探访，此后多场访谈也在此展开。请记录在场人员、观察到的情况，以及后续需要跟进的问题。') },
+        { id: 'n2', title: T('Settling into the neighborhood', '融入街区的过程'), tag: 'Diary entry',
+          meta: [ { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T("A diary entry from the early weeks of fieldwork, on finding housing and introductions. Keep this in your own voice — it's a working record, not for publication as written.",
+            '这是田野调查初期几周关于寻找住处与结识他人的日记。请保留您自己的语气——这是工作记录，原文并非用于发表。') },
+        { id: 'n3', title: T('Generational differences in residency status', '不同世代间居留身份的差异'), tag: 'Paper draft',
+          meta: [ { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('A draft section comparing how residency status shapes daily life across generations. Add your argument, evidence from interviews, and citations as the draft develops.',
+            '这是一份比较不同世代居留身份如何影响日常生活的论文草稿章节。请随着写作推进补充论点、访谈证据与引用。') },
+        { id: 'n4', title: T('Mosque committee meeting', '清真寺理事会会议'), tag: 'Field note',
+          meta: [ { k: T('Date', '日期'), v: T('—', '—') } ],
+          body: T('Notes from sitting in on a committee meeting about the endowment records. Record attendees, topics discussed, and any documents referenced.',
+            '记录了旁听一次关于产业记录的理事会会议。请记录与会人员、讨论议题，以及提及的任何文件。') },
+      ],
+    },
+  };
+
+  goHome = () => this.setState({ view: 'home', sectionKey: null, itemId: null });
+  goSection = (key) => this.setState({ view: 'list', sectionKey: key, itemId: null });
+  openItem = (key, id) => this.setState({ view: 'detail', sectionKey: key, itemId: id });
+  setLang = (lang) => this.setState({ lang });
+
+  tagClassFor(tag) {
+    const map = {
+      Resident: 'tag-accent', 'Non-resident': 'tag-neutral', General: 'tag-outline',
+      'Field note': 'tag-accent', 'Diary entry': 'tag-neutral', 'Paper draft': 'tag-outline',
+    };
+    return map[tag] || 'tag-outline';
+  }
+
+  renderVals() {
+    const { view, sectionKey, itemId, lang } = this.state;
+    const showSampleHints = this.props.showSampleHints ?? true;
+    const cardLayout = this.props.cardLayout ?? 'grid';
+    const r = (obj) => obj[lang];
+    const rMeta = (meta) => meta.map((m) => ({ k: r(m.k), v: r(m.v) }));
+
+    const navItems = this.sectionOrder.map((k) => ({
+      key: k, label: r(this.sections[k].navLabel),
+      current: sectionKey === k ? 'page' : '',
+      go: () => this.goSection(k),
+    }));
+
+    const rawSection = sectionKey ? this.sections[sectionKey] : null;
+    const section = rawSection ? {
+      navLabel: r(rawSection.navLabel), kicker: r(rawSection.kicker), intro: r(rawSection.intro),
+    } : null;
+
+    const items = rawSection ? rawSection.items.map((it) => ({
+      id: it.id,
+      title: r(it.title),
+      body: r(it.body),
+      meta: rMeta(it.meta),
+      tag: it.tag ? r(this.tagLabels[it.tag]) : '',
+      tagClass: it.tag ? this.tagClassFor(it.tag) : '',
+      imageId: it.imageId,
+      showImage: sectionKey === 'photos',
+      open: () => this.openItem(sectionKey, it.id),
+    })) : [];
+
+    let currentItem = null;
+    if (rawSection && itemId) {
+      const it = rawSection.items.find((i) => i.id === itemId);
+      if (it) {
+        currentItem = {
+          title: r(it.title),
+          body: r(it.body),
+          meta: rMeta(it.meta),
+          tag: it.tag ? r(this.tagLabels[it.tag]) : '',
+          tagClass: it.tag ? this.tagClassFor(it.tag) : '',
+          showImage: sectionKey === 'photos',
+          fullImageId: it.imageId ? it.imageId + '-full' : '',
+        };
+      }
+    }
+
+    return {
+      isHome: view === 'home',
+      isList: view === 'list',
+      isDetail: view === 'detail',
+      navItems,
+      brandText: r(this.ui.brand),
+      heroKicker: r(this.ui.heroKicker),
+      heroTitle: r(this.ui.heroTitle),
+      heroIntro: r(this.ui.heroIntro),
+      statLabels: {
+        books: r(this.ui.statLabels.books), photos: r(this.ui.statLabels.photos),
+        interviews: r(this.ui.statLabels.interviews), notes: r(this.ui.statLabels.notes),
+      },
+      itemsSuffix: r(this.ui.itemsSuffix),
+      homeLinkText: r(this.ui.homeLink),
+      sampleHintText: r(this.ui.sampleHint),
+      sampleHintDetailText: r(this.ui.sampleHintDetail),
+      langEnCurrent: lang === 'en' ? 'page' : '',
+      langZhCurrent: lang === 'zh' ? 'page' : '',
+      setLangEn: () => this.setLang('en'),
+      setLangZh: () => this.setLang('zh'),
+      sectionCards: this.sectionOrder.map((k) => ({
+        label: r(this.sections[k].navLabel), kicker: r(this.sections[k].kicker),
+        intro: r(this.sections[k].intro), count: this.sections[k].items.length,
+        open: () => this.goSection(k),
+      })),
+      counts: {
+        books: this.sections.books.items.length,
+        photos: this.sections.photos.items.length,
+        interviews: this.sections.interviews.items.length,
+        notes: this.sections.notes.items.length,
+      },
+      section, items, currentItem,
+      showSampleHints,
+      gridStyle: cardLayout === 'list'
+        ? 'display:flex;flex-direction:column;gap:12px'
+        : 'display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px',
+      goHome: this.goHome,
+      backToList: sectionKey ? () => this.goSection(sectionKey) : this.goHome,
+    };
+  }
+}
+</script>
+</body>
+</html>
