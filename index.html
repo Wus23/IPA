@@ -14,13 +14,71 @@
 <script src="_ds/modernist-90b18a50-15f0-449f-a540-2f104d7296ae/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
 <style>
+  :root {
+    --color-bg: #FBF9FC;
+    --color-surface: #F3EEF6;
+    --color-text: #241128;
+    --color-divider: color-mix(in srgb, #85754E 55%, transparent);
+
+    --color-accent: #6608A6;
+    --color-accent-100: color-mix(in oklch, #6608A6 12%, white);
+    --color-accent-200: color-mix(in oklch, #6608A6 25%, white);
+    --color-accent-300: color-mix(in oklch, #6608A6 45%, white);
+    --color-accent-400: color-mix(in oklch, #6608A6 70%, white);
+    --color-accent-500: #6608A6;
+    --color-accent-600: color-mix(in oklch, #6608A6 85%, black);
+    --color-accent-700: color-mix(in oklch, #6608A6 70%, black);
+    --color-accent-800: color-mix(in oklch, #6608A6 55%, black);
+    --color-accent-900: color-mix(in oklch, #6608A6 40%, black);
+
+    --color-accent-2: #D9337F;
+    --color-accent-2-100: color-mix(in oklch, #D9337F 12%, white);
+    --color-accent-2-200: color-mix(in oklch, #D9337F 25%, white);
+    --color-accent-2-300: color-mix(in oklch, #D9337F 45%, white);
+    --color-accent-2-400: color-mix(in oklch, #D9337F 70%, white);
+    --color-accent-2-500: #D9337F;
+    --color-accent-2-600: color-mix(in oklch, #D9337F 85%, black);
+    --color-accent-2-700: color-mix(in oklch, #D9337F 70%, black);
+    --color-accent-2-800: color-mix(in oklch, #D9337F 55%, black);
+    --color-accent-2-900: color-mix(in oklch, #D9337F 40%, black);
+
+    --color-neutral-100: color-mix(in oklch, #8A8D8F 10%, white);
+    --color-neutral-200: color-mix(in oklch, #8A8D8F 22%, white);
+    --color-neutral-300: color-mix(in oklch, #8A8D8F 40%, white);
+    --color-neutral-400: color-mix(in oklch, #8A8D8F 65%, white);
+    --color-neutral-500: #8A8D8F;
+    --color-neutral-600: color-mix(in oklch, #8A8D8F 85%, black);
+    --color-neutral-700: color-mix(in oklch, #8A8D8F 70%, black);
+    --color-neutral-800: color-mix(in oklch, #8A8D8F 55%, black);
+    --color-neutral-900: color-mix(in oklch, #8A8D8F 35%, black);
+
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #241128 8%, transparent);
+    --shadow-md: 0 4px 14px color-mix(in srgb, #241128 12%, transparent);
+    --shadow-lg: 0 14px 36px color-mix(in srgb, #241128 16%, transparent);
+  }
   a { color: var(--color-accent); }
-  a:hover { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-2); }
+  .card { border: 1px solid var(--color-neutral-300); }
+  .tag-outline { border-color: #85754E; color: color-mix(in oklch, #85754E 75%, black); }
+  .ajrak-band {
+    height: 14px; width: 100%;
+    background-color: #6608A6;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cg fill='none' stroke='%23D9337F' stroke-width='1'%3E%3Cpath d='M14 1 L27 7 L14 13 L1 7 Z'/%3E%3C/g%3E%3Ccircle cx='14' cy='7' r='2' fill='%2385754E'/%3E%3Ccircle cx='0' cy='7' r='1.4' fill='%238A8D8F'/%3E%3Ccircle cx='28' cy='7' r='1.4' fill='%238A8D8F'/%3E%3C/svg%3E");
+    background-repeat: repeat-x; background-size: 28px 14px;
+  }
+  .ajrak-watermark {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.06;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%2385754E' stroke-width='1.2'%3E%3Cpath d='M28 4 L52 28 L28 52 L4 28 Z'/%3E%3Cpath d='M28 16 L40 28 L28 40 L16 28 Z'/%3E%3C/g%3E%3Ccircle cx='28' cy='28' r='3.5' fill='%236608A6'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-size: 56px 56px;
+  }
 </style>
 </helmet>
 
 <div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)">
 
+  <div class="ajrak-band"></div>
   <div class="nav">
     <div class="nav-brand" style="cursor:pointer" onClick="{{goHome}}">{{brandText}}</div>
     <sc-for list="{{navItems}}" as="item" hint-placeholder-count="4">
@@ -34,26 +92,29 @@
   </div>
 
   <sc-if value="{{isHome}}" hint-placeholder-val="{{true}}">
-    <div style="max-width:960px;margin:0 auto;padding:64px 32px 56px">
-      <h6 style="color:var(--color-accent);margin-bottom:12px">{{heroKicker}}</h6>
-      <h1 style="font-size:48px;max-width:760px">{{heroTitle}}</h1>
-      <p style="font-size:17px;max-width:640px;opacity:0.85">{{heroIntro}}</p>
-      <div class="hr"></div>
-      <div style="display:flex;gap:40px;flex-wrap:wrap;margin:8px 0 48px">
-        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.books}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.books}}</div></div>
-        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.photos}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.photos}}</div></div>
-        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.interviews}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.interviews}}</div></div>
-        <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.notes}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.notes}}</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
-        <sc-for list="{{sectionCards}}" as="s" hint-placeholder-count="4">
-          <div class="card elev-sm" style="cursor:pointer" onClick="{{s.open}}">
-            <div class="card-kicker">{{s.kicker}}</div>
-            <div class="card-title">{{s.label}}</div>
-            <p class="card-body">{{s.intro}}</p>
-            <div class="card-meta">{{s.count}} {{itemsSuffix}}</div>
-          </div>
-        </sc-for>
+    <div style="max-width:960px;margin:0 auto;padding:64px 32px 56px;position:relative">
+      <div class="ajrak-watermark" style="z-index:0"></div>
+      <div style="position:relative;z-index:1">
+        <h6 style="color:var(--color-accent);margin-bottom:12px">{{heroKicker}}</h6>
+        <h1 style="font-size:48px;max-width:760px">{{heroTitle}}</h1>
+        <p style="font-size:17px;max-width:640px;opacity:0.85">{{heroIntro}}</p>
+        <div class="hr"></div>
+        <div style="display:flex;gap:40px;flex-wrap:wrap;margin:8px 0 48px">
+          <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.books}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.books}}</div></div>
+          <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.photos}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.photos}}</div></div>
+          <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.interviews}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.interviews}}</div></div>
+          <div><div style="font-size:32px;font-family:var(--font-heading);font-weight:800">{{counts.notes}}</div><div style="font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em">{{statLabels.notes}}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+          <sc-for list="{{sectionCards}}" as="s" hint-placeholder-count="4">
+            <div class="card elev-sm" style="cursor:pointer" onClick="{{s.open}}">
+              <div class="card-kicker">{{s.kicker}}</div>
+              <div class="card-title">{{s.label}}</div>
+              <p class="card-body">{{s.intro}}</p>
+              <div class="card-meta">{{s.count}} {{itemsSuffix}}</div>
+            </div>
+          </sc-for>
+        </div>
       </div>
     </div>
   </sc-if>
